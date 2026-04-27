@@ -1,0 +1,990 @@
+<!DOCTYPE html><html lang="en"><head>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scott Garcia — AI Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #001E44;
+    --navy-2: #1E407C;        /* Beaver Blue */
+    --navy-3: #96BEE6;        /* Sky Blue */
+    --paper: #ffffff;
+    --paper-2: #F4F2EE;
+    --paper-3: #EDEAE3;
+    --ink: #001E44;
+    --ink-2: #1E407C;
+    --muted: #6B7080;
+    --line: rgba(0,30,68,.14);
+    --line-2: rgba(0,30,68,.08);
+    --accent: #96BEE6;        /* PSU sky blue */
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{ box-sizing:border-box }
+  html,body{ margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; font-size:16px; line-height:1.5; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--navy); color:#fff }
+
+  .mono{ font-family:var(--mono); font-variant-numeric: tabular-nums; }
+  .serif{ font-family:var(--serif); }
+  .label{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted) }
+
+  /* ───────── nav ───────── */
+  nav.top{
+    position:sticky; top:0; z-index:60;
+    backdrop-filter: blur(14px) saturate(140%);
+    background: rgba(255,255,255,.78);
+    border-bottom:1px solid var(--line-2);
+  }
+  .top-inner{ max-width: 1320px; margin:0 auto; padding: 16px 40px; display:flex; align-items:center; justify-content:space-between; }
+  .logo{ display:flex; align-items:center; gap:12px }
+  .logo .shield{ width:36px; height:36px; object-fit:contain }
+  .logo .nm{ font-weight:600; font-size:15px; letter-spacing:-.01em }
+  .logo .nm .dim{ color:var(--muted); font-weight:400 }
+  nav.top .links{ display:flex; gap:28px; align-items:center }
+  nav.top .links a{ font-size:14px; color:var(--ink-2); transition: color .12s }
+  nav.top .links a:hover{ color:var(--ink) }
+  .pill{
+    background: var(--navy); color: #fff; padding:10px 16px; border-radius: 999px;
+    font-size: 13px; font-weight: 500; display:inline-flex; gap:8px; align-items:center;
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .pill:hover{ transform:translateY(-1px); box-shadow: 0 6px 20px -6px rgba(0,30,68,.5); background: var(--navy-2) }
+  .pill.outline{ background:transparent; color:var(--ink); border:1px solid var(--line); }
+  .pill.outline:hover{ border-color: var(--ink); background:transparent; box-shadow:none }
+  .pill .live{ width:6px; height:6px; border-radius:50%; background:#3CCB7F; box-shadow:0 0 0 3px rgba(60,203,127,.25); animation: pulse 1.6s ease-in-out infinite }
+  @keyframes pulse{ 50%{ box-shadow:0 0 0 6px rgba(60,203,127,.0) } }
+
+  .wrap{ max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+
+  /* ───────── hero ───────── */
+  .hero{ padding: 80px 0 64px; position: relative; overflow:hidden; }
+  .hero-bg{
+    position:absolute; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(800px 500px at 10% 0%, rgba(0,30,68,.05), transparent 60%),
+      radial-gradient(600px 400px at 95% 20%, rgba(229,168,35,.08), transparent 65%);
+  }
+  .hero-inner{ position:relative; z-index:1; }
+  .availability{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:8px 14px; border-radius:999px;
+    background: var(--paper-2); border:1px solid var(--line);
+    font-size: 13px; font-weight:500; margin-bottom: 32px;
+  }
+  .availability .live{ width:7px; height:7px; border-radius:50%; background:#3CCB7F; animation:pulse 1.6s ease-in-out infinite; box-shadow:0 0 0 3px rgba(60,203,127,.2)}
+  .hero h1{
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(48px, 6.2vw, 88px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0 0 28px;
+    max-width: 16ch;
+    position: relative;
+    z-index: 2;
+  }
+  .hero h1 .em{ font-family: var(--serif); font-style:italic; font-weight:400; color: var(--navy); letter-spacing:-.02em }
+  .hero-cols{ display:grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap:72px; align-items:start; margin-top: 36px; }
+  .hero-cols > div:first-child{ display:flex; flex-direction:column; gap: 28px }
+  .hero-lede{ font-size: 19px; line-height: 1.6; color: var(--ink-2); max-width: 56ch; margin:0 }
+  .hero-lede b{ color: var(--ink); font-weight: 600 }
+  .hero-cta{ display:flex; gap:12px; flex-wrap:wrap; }
+  .hero-aside{
+    /* lift up so it starts level with the availability pill / H1 */
+    margin-top: -260px;
+    border:1px solid var(--line); border-radius:18px; overflow:hidden;
+    background:var(--paper-2);
+    align-self:start;
+    position: relative; z-index: 1;
+  }
+  .hero-aside .photo{ aspect-ratio: 4/5; background:#d8d3c4; position:relative; overflow:hidden }
+  .hero-aside .photo img{ width:100%; height:100%; object-fit:cover; object-position:center 22%; display:block; filter: contrast(1.02) }
+  .hero-aside .id{ padding:18px 20px; display:grid; grid-template-columns:auto 1fr; gap:8px 14px; font-size:13px }
+  .hero-quicklist{
+    display:grid; grid-template-columns: 1fr 1fr; gap:1px;
+    background: var(--line);
+    border:1px solid var(--line);
+    border-radius: 14px; overflow:hidden;
+    margin-top: 4px;
+  }
+  .hero-quicklist a{
+    background: var(--paper);
+    padding: 18px 20px;
+    display:flex; flex-direction:column; gap:6px;
+    text-decoration:none; color: inherit;
+    transition: background .15s ease;
+  }
+  .hero-quicklist a:hover{ background: var(--paper-2) }
+  .hero-quicklist .ql-k{ font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted) }
+  .hero-quicklist .ql-v{ font-family:var(--serif); font-size:18px; line-height:1.2; color: var(--ink) }
+  .hero-quicklist .ql-v em{ font-style:italic; color:var(--navy) }
+  .hero-quicklist .ql-s{ font-size:12.5px; color:var(--muted); line-height:1.4 }
+
+  .hero-stats{
+    display:grid; grid-template-columns: repeat(3, 1fr);
+    gap:0; border-top:1px solid var(--line);
+    margin-top: 64px;
+  }
+  .hstat{ padding: 28px 28px 28px 0; border-right:1px solid var(--line); }
+  .hstat:last-child{ border-right:none; padding-right:0 }
+  .hstat .v{ font-family:var(--serif); font-size: clamp(36px, 4vw, 56px); line-height:1; letter-spacing:-.02em }
+  .hstat .v sup{ font-size: .4em; vertical-align: top; opacity:.5; font-family:var(--mono) }
+  .hstat .v em{ font-style:italic; color: var(--navy) }
+  .hstat .k{ margin-top: 10px; color: var(--ink-2); font-size: 14px; max-width: 36ch }
+
+  /* ───────── trust marks ───────── */
+  .marks{ padding: 32px 0 56px; border-top:1px solid var(--line-2); border-bottom:1px solid var(--line-2); margin-top: 56px }
+  .marks-inner{ display:grid; grid-template-columns: 200px 1fr; gap:48px; align-items:center }
+  .marks-inner .label{ }
+  .marks-row{ display:flex; gap:48px; flex-wrap:wrap; align-items:center; }
+  .mk{ font-family:var(--serif); font-style:italic; font-size: 22px; color: var(--ink-2); display:inline-flex; align-items:baseline; gap:10px }
+  .mk .when{ font-family:var(--mono); font-style:normal; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color: var(--muted) }
+
+  /* ───────── service ───────── */
+  section{ padding: 96px 0; }
+  .section-head{
+    display:grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    column-gap:80px; row-gap:18px;
+    align-items:start;
+    margin-bottom: 64px;
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+  }
+  .section-head .num{
+    grid-column: 1 / -1;
+    font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted);
+    display:flex; align-items:center; gap:14px;
+    margin-bottom: 4px;
+  }
+  .section-head .num::after{
+    content:''; flex:1; height:1px; background: var(--line); max-width: 0;
+  }
+  .section-head h2{
+    font-family: var(--sans); font-weight:500;
+    font-size: clamp(30px, 3.2vw, 44px);
+    line-height: 1.08; letter-spacing:-.02em; margin:0;
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+  .section-head h2 em{ font-family:var(--serif); font-style:italic; font-weight:400; color: var(--navy) }
+  .section-head .desc{
+    color: var(--ink-2);
+    font-size: 16px; line-height: 1.6;
+    max-width: 44ch;
+    margin:0;
+    padding-top: 14px;
+    text-wrap: pretty;
+  }
+
+  .offer-card{
+    background: linear-gradient(180deg, var(--navy) 0%, #00163A 100%);
+    color: #fff;
+    border-radius: 24px;
+    padding: 56px;
+    position:relative; overflow:hidden;
+  }
+  .offer-card::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(900px 400px at 100% 0%, rgba(229,168,35,.18), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,.04), transparent 30%);
+  }
+  .offer-grid{ display:grid; grid-template-columns: 1.4fr 1fr; gap:48px; position:relative; z-index:1 }
+  .offer-card h3{
+    font-family: var(--sans); font-weight:500;
+    font-size: clamp(30px, 3.4vw, 44px); line-height:1.1; letter-spacing:-.02em; margin: 0 0 20px;
+    max-width: 22ch;
+  }
+  .offer-card h3 em{ font-family:var(--serif); font-style:italic; font-weight:400; color: var(--accent) }
+  .offer-card .lede{ font-size: 18px; color: rgba(255,255,255,.78); max-width: 52ch; line-height: 1.55; margin: 0 0 32px }
+  .offer-pillars{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top:1px solid rgba(255,255,255,.18) }
+  .opill{ padding: 24px 0; padding-right:18px; border-right:1px solid rgba(255,255,255,.18) }
+  .opill:last-child{ border-right:none }
+  .opill .k{ font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom: 10px }
+  .opill .v{ font-family:var(--serif); font-size: 36px; line-height:1; letter-spacing:-.01em }
+  .opill .v em{ font-style:italic; color: var(--accent) }
+  .opill p{ color: rgba(255,255,255,.7); font-size: 13px; margin-top: 8px; line-height:1.45 }
+
+  .offer-card .right{ display:flex; flex-direction:column; gap:14px }
+  .vert{
+    background: rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display:grid; grid-template-columns: 24px 1fr auto; gap:14px; align-items:center;
+    transition: background .15s, border-color .15s;
+  }
+  .vert:hover{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22) }
+  .vert .n{ font-family:var(--mono); font-size:11px; color: rgba(255,255,255,.5) }
+  .vert .nm{ font-family:var(--serif); font-size: 22px; line-height:1.1 }
+  .vert .what{ font-size: 13px; color: rgba(255,255,255,.65); display:block; margin-top:4px }
+  .vert .arr{ color: rgba(255,255,255,.4); font-family:var(--mono); }
+
+  /* ───────── timeline / where ───────── */
+  .where{ background: var(--paper-2); }
+  .timeline{
+    display:grid; grid-template-columns: 1fr;
+    border-top:1px solid var(--line);
+  }
+  .row{
+    display:grid; grid-template-columns: 200px 1fr 220px;
+    gap:32px; padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+    transition: background .15s;
+  }
+  .row:hover{ background: rgba(255,255,255,.5) }
+  .row .when{ font-family:var(--mono); font-size:12px; letter-spacing:.08em; color: var(--ink-2); text-transform:uppercase }
+  .row .when .live{ display:inline-flex; align-items:center; gap:8px; color: #2A8B5C; font-weight:600 }
+  .row .when .live::before{ content:""; width:6px; height:6px; border-radius:50%; background:#3CCB7F; box-shadow:0 0 0 3px rgba(60,203,127,.2); animation:pulse 1.6s infinite }
+  .row .org{ font-family:var(--serif); font-size: 36px; line-height:1.05; letter-spacing:-.01em }
+  .row .role{ font-size: 15px; color: var(--muted); margin-top: 6px }
+  .row .summary{ font-size: 16px; line-height: 1.55; color: var(--ink-2); }
+  .row .summary .num{ font-family:var(--mono); color: var(--navy); font-weight:600 }
+
+  /* ───────── results ───────── */
+  .results{ background: var(--ink); color: #fff; position:relative; overflow:hidden }
+  .results::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .results .section-head{ border-top-color: rgba(255,255,255,.16) }
+  .results .section-head h2{ color:#fff }
+  .results .section-head h2 em{ color: var(--accent) }
+  .results .section-head .desc{ color: rgba(255,255,255,.7) }
+  .results .section-head .num{ color: rgba(255,255,255,.5) }
+  .results .section-head .num::after{ background: rgba(255,255,255,.16) }
+  .res-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top:1px solid rgba(255,255,255,.16); position:relative }
+  .res{ padding: 48px 32px 48px 0; border-right:1px solid rgba(255,255,255,.16) }
+  .res:last-child{ border-right:none; padding-right:0 }
+  .res .big{
+    font-family: var(--serif);
+    font-size: clamp(64px, 7.5vw, 112px);
+    line-height: .95; letter-spacing:-.025em;
+    display:block;
+  }
+  .res .big sup{ font-family:var(--mono); font-size: .35em; vertical-align: top; opacity:.55 }
+  .res .big em{ font-style:italic; color: var(--accent) }
+  .res .desc{ margin-top: 20px; font-size: 17px; color: rgba(255,255,255,.78); line-height:1.55; max-width: 36ch }
+  .res .src{ margin-top: 16px; font-family:var(--mono); font-size: 11px; letter-spacing:.14em; text-transform:uppercase; color: rgba(255,255,255,.5) }
+
+  /* ───────── case studies ───────── */
+  .cases{ padding: 96px 0; }
+  .case{
+    border:1px solid var(--line);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 24px;
+    background: var(--paper);
+    transition: box-shadow .2s, border-color .2s;
+    position:relative; overflow:hidden;
+  }
+  .case:hover{ box-shadow: 0 24px 60px -28px rgba(0,30,68,.18); border-color: rgba(0,30,68,.18) }
+  .case-head{ display:grid; grid-template-columns: 1fr auto; gap:32px; align-items:start; margin-bottom: 24px; }
+  .case-tag{ display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color: var(--muted); margin-bottom: 14px; }
+  .case-tag .dot{ width:6px; height:6px; border-radius:50%; background: var(--navy) }
+  .case h3{
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(26px, 2.8vw, 38px);
+    line-height: 1.15; letter-spacing:-.015em;
+    margin: 0; max-width: 24ch;
+  }
+  .case h3 em{ font-family:var(--serif); font-style:italic; font-weight:400; color: var(--navy) }
+  .case-when{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color: var(--muted); white-space:nowrap }
+  .case-tldr{
+    font-size: 18px; line-height: 1.55; color: var(--ink-2);
+    border-left: 2px solid var(--navy); padding-left: 18px;
+    margin: 0 0 28px; max-width: 78ch;
+  }
+
+  .case-stats{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0 0 28px }
+  .cs{ padding: 22px 0; padding-right: 24px; border-right: 1px solid var(--line) }
+  .cs:last-child{ border-right: none }
+  .cs .v{ font-family:var(--serif); font-size: 44px; line-height:1; letter-spacing:-.01em }
+  .cs .v sup{ font-size:.42em; opacity:.55; vertical-align: top; font-family:var(--mono) }
+  .cs .k{ margin-top: 8px; font-family:var(--mono); font-size: 11px; letter-spacing:.12em; text-transform: uppercase; color: var(--muted) }
+
+  .case-cols{ display:grid; grid-template-columns: 1fr 1fr; gap: 32px }
+  .case-block h4{ font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color: var(--muted); margin: 0 0 12px; font-weight: 500 }
+  .case-block p{ margin: 0 0 12px; line-height: 1.6; color: var(--ink-2); font-size: 16px }
+  .case-block ul{ margin: 0; padding-left: 18px; line-height: 1.7; color: var(--ink-2); font-size: 16px }
+  .case-block em{ font-family: var(--serif); font-style: italic; color: var(--ink) }
+  .chips{ display:flex; flex-wrap:wrap; gap: 6px; margin-top: 28px }
+  .chip{ font-family:var(--mono); font-size: 10px; letter-spacing:.1em; padding: 5px 11px; border:1px solid var(--line); border-radius: 999px; color: var(--ink-2); background: var(--paper-2) }
+
+  /* agent diagram */
+  .agents{
+    background: var(--paper-2);
+    border-radius: 16px; padding: 28px;
+    margin-top: 28px;
+    display:grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
+  }
+  .agnt{
+    background: #fff; border:1px solid var(--line); border-radius: 12px;
+    padding: 16px 14px; text-align:center; position:relative;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .agnt:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px -16px rgba(0,30,68,.3) }
+  .agnt .nm{ font-family: var(--serif); font-style:italic; font-size: 22px; line-height:1; }
+  .agnt .role-l{ display:block; margin-top: 8px; font-family:var(--mono); font-size: 9px; letter-spacing:.14em; text-transform: uppercase; color: var(--muted) }
+  .agnt::after{ content:""; display:block; width:6px; height:6px; border-radius:50%; background: var(--navy); margin: 12px auto 0 }
+
+  /* ───────── process ───────── */
+  .process-wrap{ background: var(--paper-2) }
+  .steps{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px }
+  .step{
+    background: #fff; border:1px solid var(--line); border-radius: 18px;
+    padding: 28px; position:relative;
+    transition: border-color .15s, transform .15s;
+  }
+  .step:hover{ border-color: var(--navy); transform: translateY(-2px) }
+  .step .wkno{ font-family:var(--mono); font-size: 11px; letter-spacing:.14em; text-transform:uppercase; color: var(--accent); font-weight:600 }
+  .step h4{ font-family: var(--sans); font-weight: 500; font-size: 24px; letter-spacing:-.01em; margin: 14px 0 10px; line-height: 1.15 }
+  .step p{ margin: 0 0 16px; color: var(--ink-2); font-size: 14px; line-height:1.55 }
+  .step ul{ margin: 0; padding-left: 16px; color: var(--muted); font-size: 13px; line-height: 1.7 }
+
+  /* ───────── about ───────── */
+  .about-grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: start }
+  .about-lead{
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(28px, 3.4vw, 42px); line-height: 1.2;
+    letter-spacing: -.015em; margin: 0 0 24px;
+  }
+  .about-lead em{ font-family:var(--serif); font-style:italic; font-weight:400; color: var(--navy) }
+  .about-grid p{ font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0 0 14px; max-width: 56ch }
+  .about-side{
+    background: var(--paper-2); border-radius: 18px; padding: 28px;
+    border:1px solid var(--line);
+  }
+  .about-side h4{ font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color: var(--muted); margin: 0 0 16px; font-weight: 500 }
+  .about-row{ padding: 12px 0; border-bottom: 1px solid var(--line); display:grid; grid-template-columns: 1fr 1fr; gap: 18px; font-size: 14px }
+  .about-row:last-child{ border-bottom:none }
+  .about-row .k{ color: var(--muted) }
+  .about-row .v{ color: var(--ink); font-weight: 500 }
+  .quote{
+    margin-top: 24px; padding: 24px;
+    background: var(--navy); color:#fff; border-radius: 14px;
+    font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 1.4;
+  }
+  .quote-cite{ font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-top: 14px; display:block }
+
+  /* ───────── guarantee ───────── */
+  .guar{ padding: 96px 0; }
+  .guar-card{
+    background: linear-gradient(135deg, var(--paper-2), var(--paper-3));
+    border-radius: 24px; padding: 64px;
+    border: 1px solid var(--line);
+    display:grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items:center;
+    position: relative; overflow: hidden;
+  }
+  .guar-card::before{
+    content:""; position:absolute; right:-100px; top:-100px; width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(229,168,35,.18), transparent 65%);
+    pointer-events:none;
+  }
+  .guar-card h3{
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(34px, 4vw, 52px); line-height: 1.05; letter-spacing: -.02em;
+    margin: 0 0 20px; max-width: 22ch; position:relative;
+  }
+  .guar-card h3 em{ font-family:var(--serif); font-style:italic; font-weight:400; color: var(--navy) }
+  .guar-card p{ font-size: 18px; line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 50ch; position: relative }
+  .seal{
+    width: 220px; height: 220px; border-radius: 50%;
+    border: 2px solid var(--navy);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; position:relative; justify-self: end;
+    background: rgba(255,255,255,.6);
+  }
+  .seal .ring{ position:absolute; inset: 10px; border-radius:50%; border: 1px dashed rgba(0,30,68,.5) }
+  .seal .inner{ font-family: var(--serif); font-style:italic; font-size: 38px; color: var(--navy); line-height:1 }
+  .seal .yr{ position:absolute; bottom: 18px; left:0; right:0; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--navy) }
+
+  /* ───────── contact ───────── */
+  .contact{ padding: 120px 0 64px }
+  .contact-grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: start }
+  .contact h2{
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(48px, 6vw, 92px);
+    line-height: .98; letter-spacing: -.03em; margin: 0 0 24px;
+  }
+  .contact h2 em{ font-family:var(--serif); font-style: italic; font-weight: 400; color: var(--navy) }
+  .contact .sub{ font-size: 21px; line-height: 1.45; color: var(--ink-2); margin: 0 0 32px; max-width: 50ch }
+  .ccard{
+    background: var(--paper-2); border:1px solid var(--line); border-radius: 18px; padding: 32px;
+  }
+  .ccard h4{ font-family:var(--mono); font-size: 11px; letter-spacing:.18em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; font-weight: 500 }
+  .ccard .row{ padding: 14px 0; border-bottom: 1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap: 12px; font-size: 14px; grid-template-columns: none; background: transparent }
+  .ccard .row:last-child{ border-bottom:none }
+  .ccard .row:hover{ background: transparent }
+  .ccard .row .k{ font-family:var(--mono); font-size: 11px; letter-spacing:.12em; text-transform: uppercase; color: var(--muted) }
+  .ccard .row .v{ font-weight: 500 }
+  .ccard a.v:hover{ color: var(--navy) }
+
+  /* ───────── footer ───────── */
+  footer{ padding: 28px 40px; border-top: 1px solid var(--line) }
+  .foot-inner{ max-width: 1320px; margin: 0 auto; display:flex; justify-content:space-between; align-items:center; gap: 24px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  footer .marks-list{ display:flex; gap: 24px }
+
+  @media (max-width: 900px){
+    .wrap, .top-inner, .foot-inner{ padding-left: 24px; padding-right: 24px }
+    .hero-cols, .marks-inner, .section-head, .offer-grid, .res-grid, .case-cols, .about-grid, .guar-card, .contact-grid{ grid-template-columns: 1fr; gap: 32px }
+    .row{ grid-template-columns: 1fr; gap: 12px }
+    .steps{ grid-template-columns: 1fr 1fr }
+    .agents{ grid-template-columns: 1fr 1fr 1fr }
+    .case-stats, .offer-pillars, .hero-stats{ grid-template-columns: 1fr; }
+    .cs, .opill, .hstat{ border-right: none; border-bottom: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body data-cc-id="cc-1" style="cursor: crosshair;">
+
+<nav class="top">
+  <div class="top-inner">
+    <a href="#top" class="logo">
+      <img class="shield" src="assets/penn-state-shield.png" alt="Penn State">
+      <span class="nm">Scott Garcia <span class="dim">/ AI Architect</span></span>
+    </a>
+    <div class="links">
+      <a href="#service">Service</a>
+      <a href="#work">Work</a>
+      <a href="#cases">Case studies</a>
+      <a href="#about">About</a>
+      <a href="https://calendly.com/scottdgarciajr/30min" target="_blank" rel="noopener" class="pill"><span class="live"></span>Book a call</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="wrap hero-inner">
+    <div class="availability">
+      <span class="live"></span>
+      Available · 1 build slot open for May–June 2026
+    </div>
+    <h1>
+      AI systems that<br>
+      <span class="em">earn their keep</span> —<br>
+      built in four weeks.
+    </h1>
+
+    <div class="hero-cols">
+      <div>
+        <p class="hero-lede">
+          I'm Scott Garcia — a <b>Schreyer Honors cybersecurity student at Penn State</b>
+          shipping production AI systems for small &amp; mid-sized teams.
+          Flat fee, fixed timeline, and you keep <b>100% of the source code</b>.
+          If it doesn't pay for itself in a year, you get every dollar back.
+        </p>
+        <div class="hero-cta">
+          <a href="#contact" class="pill">Book a 20-min scoping call →</a>
+          <a href="#cases" class="pill outline">See case studies</a>
+        </div>
+        <nav class="hero-quicklist" aria-label="Highlights">
+          <a href="#cases">
+            <span class="ql-k">Case 01 · Forte</span>
+            <span class="ql-v">A 6-agent system, <em>$377K</em> in pipeline.</span>
+            <span class="ql-s">Multi-agent · RAG · BANT · Adversarial testing</span>
+          </a>
+          <a href="#cases">
+            <span class="ql-k">Case 02 · Fenner</span>
+            <span class="ql-v">82.9k datapoints, <em>3 months/yr</em> saved.</span>
+            <span class="ql-s">Python · Ansible · Azure · Entra · CIS v8</span>
+          </a>
+          <a href="#cases">
+            <span class="ql-k">Case 03 · HackPSU</span>
+            <span class="ql-v"><em>1 of 42</em> — Best Overall, Spring '24.</span>
+            <span class="ql-s">Computer vision · 14M datapoints · 36-hour build</span>
+          </a>
+          <a href="#service">
+            <span class="ql-k">The offer</span>
+            <span class="ql-v">4 weeks · <em>$1.5–4k</em> · 100% yours.</span>
+            <span class="ql-s">Scoping → build → harden → ship &amp; hand off</span>
+          </a>
+        </nav>
+      </div>
+      <aside class="hero-aside">
+        <div class="photo">
+          <img src="assets/scott-portrait.jpeg" alt="Scott Garcia">
+        </div>
+        <div class="id">
+          <span class="label">Recently</span><span style="font-family:var(--serif); font-size:16px">AI Architect, <em style="font-style:italic; color:var(--navy)">Forte</em> ('26)</span>
+          <span class="label">Incoming</span><span style="font-family:var(--serif); font-size:16px">Cyber Strategy, <em style="font-style:italic; color:var(--navy)">PwC</em></span>
+          <span class="label">Studying</span><span style="font-family:var(--serif); font-size:16px">Penn State · Schreyer '27</span>
+          <span class="label">Based</span><span style="font-family:var(--serif); font-size:16px">Mt. Joy &amp; State College, PA</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="v">$377K<sup>+</sup></div>
+        <div class="k">Pipeline generated by a 6-agent production system at Forte Mental Fitness.</div>
+      </div>
+      <div class="hstat">
+        <div class="v">3 <em>months</em></div>
+        <div class="k">Of annual security auditing, automated away at Fenner Precision Polymers.</div>
+      </div>
+      <div class="hstat">
+        <div class="v">1<span style="opacity:.4"> / </span>42</div>
+        <div class="k">Best Overall, HackPSU Spring 2024 — computer vision over 14M data points.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- trust marks -->
+<div class="wrap">
+  <div class="marks">
+    <div class="marks-inner">
+      <div class="label">Recently / currently working with</div>
+      <div class="marks-row">
+        <span class="mk">Forte<span class="when">Jan — Apr '26</span></span>
+        <span class="mk">PwC<span class="when">Summer '26 · Incoming</span></span>
+        <span class="mk">Fenner Precision Polymers<span class="when">2025</span></span>
+        <span class="mk">LCBC<span class="when">2024</span></span>
+        <span class="mk">Penn State Schreyer Honors<span class="when">'23 — '27</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- service -->
+<section id="service">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 01 — Service</span>
+      <h2>One offer, <em>four weeks</em>, fully owned by you.</h2>
+      <p class="desc">I design and ship the AI systems that replace the repetitive work eating your team's week — intake, scheduling, follow-up, document review.</p>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-grid">
+        <div>
+          <h3>Custom AI automation for small businesses — <em>built in four weeks, yours to keep.</em></h3>
+          <p class="lede">Flat fee. Fixed timeline. Full source code, prompts, infrastructure, and runbooks delivered at handoff. Refunded if it doesn't pay for itself in twelve months.</p>
+
+          <div class="offer-pillars">
+            <div class="opill">
+              <div class="k">Engagement</div>
+              <div class="v"><em>4</em> weeks</div>
+              <p>Scoped, shipped, supported.</p>
+            </div>
+            <div class="opill">
+              <div class="k">Investment</div>
+              <div class="v">$1.5–4K</div>
+              <p>Flat. No retainer.</p>
+            </div>
+            <div class="opill">
+              <div class="k">Ownership</div>
+              <div class="v"><em>100%</em></div>
+              <p>Code, prompts, infra — yours.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="label" style="color:rgba(255,255,255,.55); margin-bottom: 4px">What I've shipped</div>
+          <div class="vert"><span class="n">01</span><div><span class="nm">Multi-agent systems</span><span class="what">RAG + BANT, adversarial &amp; observability</span></div><span class="arr">→</span></div>
+          <div class="vert"><span class="n">02</span><div><span class="nm">Security automation</span><span class="what">Python &amp; Ansible audit / report workflows</span></div><span class="arr">→</span></div>
+          <div class="vert"><span class="n">03</span><div><span class="nm">Computer vision &amp; ML</span><span class="what">Production classifiers on real datasets</span></div><span class="arr">→</span></div>
+          <div class="vert"><span class="n">04</span><div><span class="nm">Internal tooling &amp; audits</span><span class="what">Firewall, LLM access, custom dashboards</span></div><span class="arr">→</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- where i've worked -->
+<section class="where" id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 02 — Track record</span>
+      <h2>Track record.</h2>
+      <p class="desc">Cybersecurity internships in industry, an AI architect contract this spring, and a summer at PwC on the way.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="row">
+        <div class="when">Jan — Apr 2026 · Contract · Remote</div>
+        <div>
+          <div class="org">Forte Mental Fitness <em style="font-family:var(--serif); font-style:italic; font-weight:400; color:var(--muted); font-size:.7em">/ AI Architect</em></div>
+          <div class="role">Most recent · Contract · State College, PA</div>
+        </div>
+        <div class="summary">Designed a <span class="num">6-agent</span> production system across customer acquisition, qualification, and support. RAG-grounded; BANT-routed; adversarial &amp; observability harnesses.</div>
+      </div>
+
+      <div class="row">
+        <div class="when">Incoming<br>Summer 2026</div>
+        <div>
+          <div class="org">PwC <em style="font-family:var(--serif); font-style:italic; font-weight:400; color:var(--muted); font-size:.7em">/ Cyber Strategy, Risk &amp; Compliance</em></div>
+          <div class="role">Internship · Philadelphia</div>
+        </div>
+        <div class="summary">Joining the cybersecurity consulting practice this summer.</div>
+      </div>
+
+      <div class="row">
+        <div class="when">May — Aug 2025</div>
+        <div>
+          <div class="org">Fenner Precision Polymers <em style="font-family:var(--serif); font-style:italic; font-weight:400; color:var(--muted); font-size:.7em">/ Cybersecurity Intern</em></div>
+          <div class="role">Internship · Lititz, PA</div>
+        </div>
+        <div class="summary">Audited <span class="num">82,900+</span> security benchmark datapoints. Built Python/Ansible automation that saved <span class="num">~3 months</span> of manual work per year.</div>
+      </div>
+
+      <div class="row">
+        <div class="when">Jun — Aug 2024</div>
+        <div>
+          <div class="org">LCBC Church <em style="font-family:var(--serif); font-style:italic; font-weight:400; color:var(--muted); font-size:.7em">/ Cybersecurity Intern</em></div>
+          <div class="role">Internship · Manheim, PA</div>
+        </div>
+        <div class="summary">Firewall audits and Fortigate installs across <span class="num">20+</span> locations. Wrote scripts that automated firewall audits at multi-site scale.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- results -->
+<section class="results" id="results">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 03 — Selected results</span>
+      <h2>Selected results.</h2>
+      <p class="desc">Three projects, three different problems, three measurable outcomes.</p>
+    </div>
+
+    <div class="res-grid">
+      <div class="res">
+        <span class="big">$377K<sup>+</sup></span>
+        <div class="desc">Pipeline generated by a 6-agent production system across 1,000+ CRM contacts and 24 stalled MQL deals.</div>
+        <div class="src">Forte · 2026</div>
+      </div>
+      <div class="res">
+        <span class="big">3 <em>mo</em></span>
+        <div class="desc">Of annual security auditing time saved by Python &amp; Ansible workflows in a global manufacturing org.</div>
+        <div class="src">Fenner · 2025</div>
+      </div>
+      <div class="res">
+        <span class="big">1<em>/</em>42</span>
+        <div class="desc">First place at HackPSU Spring 2024 with ROA — computer vision driving safety, trained on 14M data points.</div>
+        <div class="src">HackPSU · 2024</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- case studies -->
+<section class="cases" id="cases">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 04 — Case studies</span>
+      <h2>Selected case studies.</h2>
+      <p class="desc">A few projects from across security, AI, and machine learning.</p>
+    </div>
+
+    <!-- Case 1 -->
+    <article class="case">
+      <div class="case-head">
+        <div>
+          <div class="case-tag"><span class="dot"></span>Case 01 · Forte Mental Fitness</div>
+          <h3>A 6-agent ecosystem that turned 1,000 cold contacts into a <em>$377K pipeline</em>.</h3>
+        </div>
+        <div class="case-when">Jan — Apr 2026<br>Remote · Contract</div>
+      </div>
+
+      <p class="case-tldr">
+        Built a production-grade multi-agent AI system that automated customer acquisition, qualification, and support — operating across 1,000+ CRM contacts, 24 stalled MQL deals, and $377K+ in pipeline opportunities.
+      </p>
+
+      <div class="case-stats">
+        <div class="cs"><div class="v">$377K<sup>+</sup></div><div class="k">Pipeline opportunities</div></div>
+        <div class="cs"><div class="v">1,000<sup>+</sup></div><div class="k">CRM contacts processed</div></div>
+        <div class="cs"><div class="v">350<sup>+</sup></div><div class="k">Adversarial &amp; sim. tests</div></div>
+      </div>
+
+      <div class="case-cols">
+        <div class="case-block">
+          <h4>Approach</h4>
+          <p>I built a unified agent architecture combining a <em>retrieval-augmented generation (RAG)</em> framework with a <em>BANT-based qualification engine</em>. The RAG layer grounds every output in structured company knowledge — marketing, onboarding, and support stay accurate and hallucination-resistant.</p>
+          <p>The BANT layer (budget, authority, need, timeline) evaluates leads and routes them dynamically: human-in-the-loop where it matters, automated handoff where it doesn't.</p>
+        </div>
+        <div class="case-block">
+          <h4>Reliability</h4>
+          <p>Production AI is only useful when you can <em>trust</em> it. I built an adversarial &amp; stress testing harness paired with an observability pipeline:</p>
+          <ul>
+            <li>225+ adversarial prompts, 125+ simulated customer interactions</li>
+            <li>Structured failure logging with severity classification</li>
+            <li>Latency tracking and budget alerts per agent</li>
+            <li>Human-escalation triggers tuned per agent and lead tier</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="agents" aria-label="6-agent overview">
+        <div class="agnt"><span class="nm">Scout</span><span class="role-l">Lead discovery</span></div>
+        <div class="agnt"><span class="nm">Hunter</span><span class="role-l">Outbound</span></div>
+        <div class="agnt"><span class="nm">Gatekeeper</span><span class="role-l">BANT qual.</span></div>
+        <div class="agnt"><span class="nm">Shield</span><span class="role-l">Safety / esc.</span></div>
+        <div class="agnt"><span class="nm">Concierge</span><span class="role-l">Support · RAG</span></div>
+        <div class="agnt"><span class="nm">Scribe</span><span class="role-l">Observability</span></div>
+      </div>
+
+      <div class="chips">
+        <span class="chip">Anthropic Claude</span>
+        <span class="chip">Multi-agent</span>
+        <span class="chip">RAG</span>
+        <span class="chip">BANT</span>
+        <span class="chip">Adversarial testing</span>
+        <span class="chip">Python</span>
+        <span class="chip">Observability</span>
+      </div>
+    </article>
+
+    <!-- Case 2 -->
+    <article class="case">
+      <div class="case-head">
+        <div>
+          <div class="case-tag"><span class="dot"></span>Case 02 · Fenner Precision Polymers</div>
+          <h3>Three months of recurring auditing — <em>gone</em> — at a global manufacturer.</h3>
+        </div>
+        <div class="case-when">May — Aug 2025<br>On-site · Lititz, PA</div>
+      </div>
+
+      <p class="case-tldr">
+        Assessed global cybersecurity posture through data-driven analysis: scripts that audited systems, calculated statistics, and visualized 82,900+ security benchmark datapoints — then automated the recurring work.
+      </p>
+
+      <div class="case-stats">
+        <div class="cs"><div class="v">82,900<sup>+</sup></div><div class="k">Datapoints analyzed</div></div>
+        <div class="cs"><div class="v">~3 mo<span style="font-family:var(--serif);font-style:italic;font-size:.6em">/yr</span></div><div class="k">Manual effort eliminated</div></div>
+        <div class="cs"><div class="v">CIS v8</div><div class="k">Compliance baseline aligned</div></div>
+      </div>
+
+      <div class="case-cols">
+        <div class="case-block">
+          <h4>What I built</h4>
+          <ul>
+            <li>Automated security workflows in <em>Python, Ansible, Azure, Entra</em>, replacing recurring manual audits</li>
+            <li>Custom tools supporting the design and implementation of new security controls</li>
+            <li>LLM access-control audits across enterprise collaboration platforms</li>
+            <li>Visualizations turning 82.9k datapoints into a leadership-ready posture report</li>
+          </ul>
+        </div>
+        <div class="case-block">
+          <h4>What it meant</h4>
+          <p>I led investigations into international data leakage incidents and aligned policy with CIS v8 and Michelin's global standards — supporting scalable, secure operations across sensitive international environments.</p>
+          <p>The recurring auditing work that used to consume a quarter of someone's year now runs itself.</p>
+        </div>
+      </div>
+
+      <div class="chips">
+        <span class="chip">Python</span><span class="chip">Ansible</span><span class="chip">Azure</span><span class="chip">Entra</span><span class="chip">Active Directory</span><span class="chip">CIS v8</span><span class="chip">Firewall audit</span>
+      </div>
+    </article>
+
+    <!-- Case 3 -->
+    <article class="case">
+      <div class="case-head">
+        <div>
+          <div class="case-tag"><span class="dot"></span>Case 03 · HackPSU Spring 2024 · ROA</div>
+          <h3>14 million datapoints, 24 hours, <em>first place</em> out of forty-two.</h3>
+        </div>
+        <div class="case-when">March 2024<br>24-hour build · Penn State</div>
+      </div>
+
+      <p class="case-tldr">
+        ROA — Road Operational Assistant — is a computer-vision web app that brings self-driving-grade safety features to ordinary drivers. We won Best Overall at HackPSU Spring 2024.
+      </p>
+
+      <div class="case-stats">
+        <div class="cs"><div class="v">14M</div><div class="k">Datapoints in training set</div></div>
+        <div class="cs"><div class="v">1<span style="font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.7em">/</span>42</div><div class="k">Best Overall, HackPSU</div></div>
+        <div class="cs"><div class="v">24 h</div><div class="k">Build time, end-to-end</div></div>
+      </div>
+
+      <div class="case-cols">
+        <div class="case-block">
+          <h4>My role</h4>
+          <p>I owned the <em>computer vision and ML backend</em> — training a binary classification model on thousands of images of safe vs. unsafe road conditions, and building an algorithm that focuses on the road itself to balance model unpredictability with structured analysis.</p>
+        </div>
+        <div class="case-block">
+          <h4>What it does</h4>
+          <p>Combines historical accident data, traffic density, and weather with live road imagery to warn drivers of risks <em>ahead of time</em> and prescribe driving adjustments — the safety-system layer of self-driving cars, retrofitted for everyone else.</p>
+        </div>
+      </div>
+
+      <div class="chips">
+        <span class="chip">Computer vision</span><span class="chip">Binary classification</span><span class="chip">Python</span><span class="chip">Machine learning</span><span class="chip">Web app</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- process -->
+<section class="process-wrap" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 05 — Process</span>
+      <h2>Four weeks, start to finish.</h2>
+      <p class="desc">From a Tuesday scoping call to a Friday handoff. A focused engagement with a clear scope and a clean delivery.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="wkno">Week 01</div>
+        <h4>Scope &amp; instrument</h4>
+        <p>I sit with you and the people doing the actual work. We pick one workflow that's bleeding hours.</p>
+        <ul>
+          <li>Workflow walkthrough</li>
+          <li>Volume &amp; cost baseline</li>
+          <li>Data &amp; access audit</li>
+          <li>Success metric, written down</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="wkno">Week 02</div>
+        <h4>Build the spine</h4>
+        <p>Agents, prompts, retrieval, integrations. End-to-end on a sample dataset by Friday.</p>
+        <ul>
+          <li>Agent architecture</li>
+          <li>RAG over your knowledge</li>
+          <li>Tool integrations</li>
+          <li>Demo at week's end</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="wkno">Week 03</div>
+        <h4>Harden &amp; tune</h4>
+        <p>Adversarial tests. Edge-case sweeps. Human-in-the-loop wired in everywhere a wrong answer would matter.</p>
+        <ul>
+          <li>Adversarial prompt suite</li>
+          <li>Failure logging &amp; alerts</li>
+          <li>Latency &amp; cost tuning</li>
+          <li>Pilot with your team</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="wkno">Week 04</div>
+        <h4>Ship &amp; hand off</h4>
+        <p>Deployed in your environment. Source code, runbooks, training session — yours forever.</p>
+        <ul>
+          <li>Production deploy</li>
+          <li>Runbook + onboarding doc</li>
+          <li>Live training session</li>
+          <li>30-day support window</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- about -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 06 — About</span>
+      <h2>About.</h2>
+      <p class="desc">Schreyer Honors, Penn State '27. Cybersecurity major. AI builder. Hometown: Mt. Joy, PA.</p>
+    </div>
+
+    <div class="about-grid" data-cc-id="cc-4">
+      <div data-cc-id="cc-3">
+        <p class="about-lead">
+          I'm a <em>Schreyer Honors</em> student at Penn State studying cybersecurity — and I build AI systems that small &amp; mid-sized teams can actually own.
+        </p>
+        <p>I love cybersecurity, AI, programming, and Jesus. I've led award-winning hackathon teams, founded tech initiatives, and shipped projects across data-driven security automation, risk management, and machine learning.</p>
+        <p data-cc-id="cc-2" style=""><br></p>
+
+        <div class="quote">
+          "Watching the next generation think differently is energizing."
+          <span class="quote-cite">— Asher Carr · Operations Manager, Forte</span>
+        </div>
+      </div>
+
+      <aside class="about-side">
+        <h4>Quick facts</h4>
+        <div class="about-row"><span class="k">Studying</span><span class="v">B.S. Cybersecurity Analytics &amp; Operations</span></div>
+        <div class="about-row"><span class="k">Class of</span><span class="v">2027</span></div>
+        <div class="about-row"><span class="k">Honors</span><span class="v">Schreyer Honors College</span></div>
+        <div class="about-row"><span class="k">Top skills</span><span class="v">Cybersecurity · AI · Programming · Leadership</span></div>
+        <div class="about-row"><span class="k">Service</span><span class="v">President, Alliance Christian Fellowship</span></div>
+        <div class="about-row"><span class="k">Based</span><span class="v">Mt. Joy &amp; State College, PA</span></div>
+        <div class="about-row"><span class="k">Region</span><span class="v">Remote · U.S. nationwide</span></div>
+
+        <h4 style="margin-top: 28px">Recognized in</h4>
+        <div class="about-row"><span class="k">Penn State Startup Week</span><span class="v">Guest at Forte</span></div>
+        <div class="about-row"><span class="k">HackPSU Spring '24</span><span class="v">Best Overall · 1/42</span></div>
+        <div class="about-row"><span class="k">HackPSU Fall '23</span><span class="v">Skill Craft launch</span></div>
+        <div class="about-row"><span class="k">MathWorks</span><span class="v">Math Modeling Challenge</span></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- guarantee -->
+<div class="guar">
+  <div class="wrap">
+    <div class="guar-card">
+      <div>
+        <div class="label" style="margin-bottom:14px">§ 07 — The guarantee</div>
+        <h3>If the system doesn't pay for itself within twelve months, <em>I refund every dollar.</em></h3>
+        <p>Flat fee, fixed timeline, full ownership of the source code, prompts, and infrastructure. The risk lives on my side of the table.</p>
+      </div>
+      <div class="seal">
+        <div class="ring"></div>
+        <img src="assets/penn-state-shield.png" alt="Penn State Nittany Lion" style="width:130px; height:130px; object-fit:contain">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- contact -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <div class="label" style="margin-bottom:18px">§ 08 — Start a conversation</div>
+        <h2>Let's see if there's <em>a fit</em>.</h2>
+        <p class="sub">A 20-minute scoping call — free, no pitch deck. We talk through one workflow, I tell you whether AI is actually the right tool, and we go from there.</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap">
+          <a href="https://calendly.com/scottdgarciajr/30min" target="_blank" rel="noopener" class="pill">Book a call on Calendly →</a>
+          <a href="mailto:scott@scott-garcia.com" class="pill outline">scott@scott-garcia.com</a>
+        </div>
+      </div>
+
+      <aside class="ccard">
+        <h4>Direct line</h4>
+        <div class="row"><span class="k">Booking</span><a class="v" target="_blank" rel="noopener" href="https://calendly.com/scottdgarciajr/30min">calendly.com/scottdgarciajr/30min</a></div>
+        <div class="row"><span class="k">Email</span><a class="v" href="mailto:scott@scott-garcia.com">scott@scott-garcia.com</a></div>
+        <div class="row"><span class="k">LinkedIn</span><a class="v" target="_blank" rel="noopener" href="https://www.linkedin.com/in/scott-garcia-651276283/">linkedin.com/in/scott-garcia-651276283</a></div>
+        <div class="row"><span class="k">Region</span><span class="v">Remote · U.S. nationwide</span></div>
+        <div class="row"><span class="k">Response</span><span class="v">&lt; 24 hrs, weekdays</span></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <span>© 2026 Scott Garcia · scott-garcia.com</span>
+    <div class="marks-list">
+      <span>Penn State '27</span>
+      <span>Schreyer Honors College</span>
+      <span>Set in Inter, Instrument Serif &amp; JetBrains Mono</span>
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>
